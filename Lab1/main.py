@@ -81,6 +81,10 @@ class CipherApp(QWidget):
         self.result_output.setReadOnly(True)
         self.layout.addWidget(QLabel("Результат:"))
         self.layout.addWidget(self.result_output)
+
+        self.save_button = QPushButton("Сохранить в файл")
+        self.save_button.clicked.connect(self.save_file)
+        self.layout.addWidget(self.save_button)
         
         self.setLayout(self.layout)
     
@@ -95,6 +99,13 @@ class CipherApp(QWidget):
     
     def decrypt_text(self):
         self.process_text(decrypt=True)
+
+    def save_file(self, result):
+        file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить результат", "", "Текстовые файлы (*.txt);;Все файлы (*)")
+        if file_name:
+            with open(file_name, "w", encoding="utf-8") as file:
+                file.write(result)
+
     
     def process_text(self, decrypt):
         text = self.text_input.toPlainText()
@@ -125,13 +136,6 @@ class CipherApp(QWidget):
                 return 
         
         self.result_output.setText(result)
-        self.save_to_file(result)
-    
-    def save_to_file(self, result):
-        file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить результат", "", "Текстовые файлы (*.txt);;Все файлы (*)")
-        if file_name:
-            with open(file_name, "w", encoding="utf-8") as file:
-                file.write(result)
 
 if __name__ == "__main__":
     app = QApplication(argv)
